@@ -1,0 +1,276 @@
+.main {
+    width:500px;
+    margin:0 auto;
+    font-family :'Cabin', sans-serif;
+    font-size:16px;
+    border: 1px solid black;
+    box-shadow: 5px 0px 6px #888888;
+}
+
+.banner {
+    width:500px;
+    height:100px;
+    background:url(calc.jpg);
+}
+
+.title {
+    font-weight:bold;
+    text-transform:uppercase;
+    color:white;
+    font-size:20px;
+    padding-top:12px;
+    padding-left:30px;
+    text-shadow: 2px 2px #11397a;
+}
+
+.subtitle {
+    color:white;
+    text-shadow: 1px 1px 3px black;
+    padding-left:30px;
+    padding-right:30px;
+    padding-top:6px;
+}
+
+#schematic {
+    margin-bottom:-15px;
+}
+
+.checkbox {
+    width:16px;
+    border:none;
+}
+
+.property {
+    margin-left:20px;
+    height:25px;
+    line-height:20px;
+}
+
+.warning {
+    color:red;
+    font-size: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    }
+    
+/* Tooltip container */
+.tooltip {
+    margin-left:20px;
+    margin-top:15px;
+    text-transform: uppercase;
+    font-weight:bold;
+    position: relative;
+    display: inline-block;
+}
+
+.referenceCell {
+    width:100px;
+}
+   
+/* Tooltip text */
+.tooltip .tooltiptext {
+    text-transform: none;
+    font-weight:normal;
+    font-size:10px;
+    visibility: hidden;
+    width: 120px;
+    background-color: lightgray;
+    color: #000;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    
+    width: 250px;
+    bottom: 120%;
+    left: 0%;
+    margin-left: 0px; /* Use half of the width (120/2 = 60), to center the tooltip */
+    
+    /* animation */
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 5%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: lightgray transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.secondCell {
+    text-align:center;
+    padding-top:10px;
+    font-size:12px;
+}
+
+@keyframes modified {
+    0%   {background-color: white;}
+    75%  {background-color: #468CFC;}
+    100% {background-color: white;}
+}
+
+@keyframes wrong {
+    0%   {background-color: white;}
+    33%  {background-color: #FF3523;}
+    66%  {background-color: white;}
+    100% {background-color: #FF3523;}
+}
+
+@keyframes underlined {
+    0%   {border-left:2px solid white;}
+    75%  {border-left:2px solid red;}
+    100% {border-left:2px solid white;}
+}
+
+.vignette {
+    animation-name: underlined;
+    animation-duration: 2s;
+}
+
+.blink {
+    background-color: white;
+    animation-name: modified;
+    animation-duration: 2s;
+}
+
+.redAlert {
+    background-color: #FF3523;
+    animation-name: wrong;
+    animation-duration: 2s;
+}
+
+#alert {
+    padding-top:18px;
+    line-height:140%;
+    color:#FF3523;
+    font-size:11px;
+    font-weight:bold;
+    text-transform:uppercase;
+    transition-duration:0.2s;
+}
+    
+button {
+    font-family :'Cabin', sans-serif;
+    text-transform:uppercase;
+    background-color: light grey;
+    float:left;
+    border: none;
+    padding: 10px 10px;
+    margin-top: 15px;
+    margin-right:5px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+button:hover {
+    background-color: #468CFC; /* Blue */
+    color: white;
+}
+
+select {
+    font-size:16px;
+    padding:5px;
+    border:none;
+    border-bottom:1px solid black;
+    background-color:white;
+    font-family:'Cabin', sans-serif;
+}
+    
+input {
+    font-size:16px;
+    width:35px;
+    padding:6px;
+    border:none;
+    border-bottom:1px solid black;
+    background-color:white;
+    font-family:'Cabin', sans-serif;
+    text-align:center;
+    }
+    
+input[type=range] {
+  -webkit-appearance: none;
+  padding-bottom:2px;
+  margin: -10px 0;
+  width: 60%;
+  border:none;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.5px;
+  border:0.5px solid black;
+}
+input[type=range]::-webkit-slider-thumb {
+  border: 1px solid #000;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #fff;
+  -webkit-appearance: none;
+  margin-top: -7px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #000;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 0.5px;
+  background: #000;
+  border: 0.5px solid black;
+}
+input[type=range]::-moz-range-thumb {
+  border: 1px solid #000;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #fff;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 0.5px;
+  background: transparent;
+  border-color: transparent;
+  border-width: 0.5px 0;
+  color: transparent;
+}
+
+input[type=range]::-ms-thumb {
+  border: 1px solid #000;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+#paypal {
+    margin-right:20px;
+    float:right;
+}
+
+#paypalbutton {
+    width:130px;
+    border: none;
+}
+
+.bottom {
+    width:500px;
+    margin:5px auto;
+    font-family :'Cabin', sans-serif;
+    font-size:12px;
+    }
