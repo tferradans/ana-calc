@@ -122,7 +122,7 @@ function checkArray(list) {
 //alerts user of problems.
 function warningSign(bool) {
     if (bool) {
-        document.getElementById("alert").innerHTML = "Something went wrong.<br>Use nmbers only!";
+        document.getElementById("alert").innerHTML = "Something went wrong.<br>Use numbers only!";
     }
     else{
         document.getElementById("alert").innerHTML = "";

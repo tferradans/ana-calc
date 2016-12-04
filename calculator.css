@@ -1,8 +1,12 @@
-.main {
+body {
     width:500px;
     margin:0 auto;
     font-family :'Cabin', sans-serif;
     font-size:16px;
+}
+
+
+.main {
     border: 1px solid black;
     box-shadow: 5px 0px 6px #888888;
 }
@@ -10,7 +14,13 @@
 .banner {
     width:500px;
     height:100px;
-    background:url(calc.jpg);
+    background:url(../img/calc.jpg);
+}
+
+.banner2 {
+    width:500px;
+    height:100px;
+    background:url(../img/diop.jpg);
 }
 
 .title {
@@ -162,6 +172,15 @@
     text-transform:uppercase;
     transition-duration:0.2s;
 }
+
+#warning {
+    padding-top:15px;
+    line-height:140%;
+    color:#FF3523;
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
     
 button {
     font-family :'Cabin', sans-serif;
@@ -192,7 +211,7 @@ select {
     
 input {
     font-size:16px;
-    width:35px;
+    width:45px;
     padding:6px;
     border:none;
     border-bottom:1px solid black;
@@ -200,7 +219,7 @@ input {
     font-family:'Cabin', sans-serif;
     text-align:center;
     }
-    
+
 input[type=range] {
   -webkit-appearance: none;
   padding-bottom:2px;
@@ -264,7 +283,7 @@ input[type=range]::-ms-thumb {
 }
 
 #paypalbutton {
-    width:130px;
+    width:150px;
     border: none;
 }
 
@@ -273,4 +292,4 @@ input[type=range]::-ms-thumb {
     margin:5px auto;
     font-family :'Cabin', sans-serif;
     font-size:12px;
-    }
+}

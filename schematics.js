@@ -1,21 +1,21 @@
 //load all sprites
 var lens_img = new Image();
-lens_img.src = "tklens.png";
+lens_img.src = "./img/tklens.png";
 
 var crop_img = new Image();
-crop_img.src = "crop.png";
+crop_img.src = "./img/crop.png";
 
 var crop_img = new Image();
-crop_img.src = "crop.png";
+crop_img.src = "./img/crop.png";
 
 var reducer_img = new Image();
-reducer_img.src = "reducer.png";
+reducer_img.src = "./img/reducer.png";
 
 var ana_img = new Image();
-ana_img.src = "ana.png";
+ana_img.src = "./img/ana.png";
 
 var sf_img = new Image();
-sf_img.src = "sf.png";
+sf_img.src = "./img/sf.png";
 
 window.onload = function () {
 
@@ -563,8 +563,6 @@ window.onload = function () {
                 var items_array = [crop.position.x, reducer.position.x, tklens.position.x, ana.position.x, sf.position.front];
             }
             
-            console.log("sf pos", sf.position.x);
-            
             for (var i = 0; i < items_array.length; i++) {
                 //add all items in the array to find total length
                 length += items_array[i];
@@ -574,8 +572,6 @@ window.onload = function () {
                     pinpoint += items_array[i] - 1;
                 }
             } //end for
-            
-            console.log("width", WIDTH, "length", length, "pinpoint", pinpoint, pinpoint/2);
             
             //half the canvas - half the length + element position
             //floor to avoid partial pixel movement

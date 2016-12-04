@@ -1,338 +1,451 @@
 <!DOCTYPE html>
 <html>
-
+    
 <head>
-    <title>Anamorphic Calculator - v2.5</title>
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="calculator.css">
-   <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+    <title>Anamorphic Calculator - v2.8</title>
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    
+    <meta charset="UTF-8">
+    <meta name="description" content="Free online calculator for finding out the equivalent focal length while using anamorphic adapters.">
+    <meta name="keywords" content="anamorphic, close up, diopter, widescreen, field of view, calculator, cinemascope, aspect ratio, filmmaking">
+    <meta name="author" content="Tito Ferradans">
+    
+    <link rel="stylesheet" type="text/css" href="css/calculator.css">
+    <link rel="stylesheet" type="text/css" href="css/tabs.css" />
+    <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+    <script src="js/modernizr.custom.js"></script>
 </head>
 
-<body>
-    <!-- all the math! -->
-    <script src="calculator.js"></script>
-    <!-- all the canvas! -->
-    <script src="schematics.js"></script>
-    
-    <div class="main">
-        
-        <div class="banner"><div class="title">Anamorphic Calculator</div>
-        <div class="subtitle">Know the equivalent focal length of your horizontal field of view while using anamorphic adapters.</div>
-        </div>
-        
-<!-- Schematics canvas -->
-        
-        <div><canvas id="schematic"></canvas></div>
-        
-<!-- Taking Lens -->
-
-        <table class="splitField" style="width:100%;">
-            <tr>
-                <td>
-                    <div class="tooltip">Taking Lens (focal length)
-                    <!--<span class="tooltiptext">Say whatever you want to do here.</span>--></div>
-                </td>
-            <td>
-                <div class="tooltip" style="padding-left:28px; visibility:hidden;">Aperture Value
-                    <!--<span class="tooltiptext">Sometimes your aperture helps with vignetting. Sometimes it doesn't</span>--></div>
-            </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="property">
-                        <input type="input" id="tklens" alt="taking lens" value="50" onblur="checkMe(event)">&nbsp;mm
-                        <input style="margin-left:10px; width:18px;" type="checkbox" id="pancake" alt="pancake lens">Pancake Lens?
-                    </div>
-                </td>
-                <td class="secondCell" style="visibility:hidden;">
-                    opn<input type="range" id="iris" value="0" disabled>cls
-                </td>
-            </tr>
-        </table>
-        
-<!-- Camera/Sensor -->
-        
-        <div class="tooltip">Camera/Sensor Size (crop factor)
-            <span class="tooltiptext">If your camera isn't listed above, select "Custom" and input the crop factor manually</span>
-        </div>
-        
-        <div class="property">
-            <select id="crop" onchange="checkCustom(event)">
-                <option value="1">Full Frame</option>
-                <option value="1.3">APS-H</option>
-                <option value="1.5">APS-C/S35</option>
-                <option value="1.6">APS-C (Canon)</option>
-                <option value="2">MFT</option>
-                <option value="2.34">GH4 C4K</option>
-                <option value="2.49">GH4 4K UHD</option>
-                <option value="2.08">GH4 1080P</option>
-                <option value="0.5">Medium Format</option>
-                <option value="2.88">BMPCC</option>
-                <option value="1.85">BlackMagic Ursa</option>
-                <option value="custom">Custom:</option>
-            </select>
-            <span id="customCF"></span>
-        </div>
-        
-<!-- Focal Reducer -->
-        
-        <div class="tooltip">Focal Reducer
-            <span class="tooltiptext">RJ Focal Reducer and Vizelex’s Light Cannon are filed under “Others”. If your Focal Reducer isn't listed above, select "Custom" and input the magnification ratio manually</span>
-        </div>
-        
-        <div class="property">
-            <select id="reducer" onchange="checkCustom(event)">
-                <option value="1">None</option>
-                <option value="0.71">SpeedBooster</option>
-                <option value="0.64">SpeedBooster XL</option>
-                <option value="0.72">LensTurbo</option>
-                <option value="0.58">SpeedBooster BMPCC</option>
-                <option value="0.72">Others</option>
-                <option value="custom">Custom:</option>
-            </select>
-            <span id="customFR"></span>
-        </div>
-        
-<!-- Anamorphic Adapter -->
-        
-        <div class="tooltip">Anamorphic Adapter
-            <!--<span class="tooltiptext">Say whatever you want to do here.</span>-->
-        </div> <input style="margin-left:10px; width:18px;" type="checkbox" id="baby" alt="baby scope">Baby Scope?
-        
-        <div class="property">
-            <select id="ana" onchange="checkCustom(event)">
-                <option value="1.33">1.33x - Vintage (Century, Panasonic)</option>
-                <option value="1.333">1.33x - Modern (Isco, SLR Magic)</option>
-                <option value="1.5">1.5x - Iscorama, Bolex Moller</option>
-                <option value="1.75">1.75x - Kowa Inflight, Baby Hypergonar</option>
-                <option value="2">2x - Short Scope (Kowa, Elmo II, etc)</option>
-                <option value="2.001">2x - Long Scope (Sankor 16D, Elmo I, Sun, etc)</option>
-                <option value="custom">Custom:</option>
-            </select>
-            <span id="customAA"></span>
-        </div>
-        
-<!-- Single Focus -->
-        
-        <table class="splitField" style="width:100%;">
-            <tr>
-                <td>
-                    <div class="tooltip">Single Focus Solution
-                    <!--<span class="tooltiptext">If your camera isn't listed above, select "Custom" and input the crop factor manually</span>--></div>
-                </td>
-            <td>
-                <div class="tooltip" id="focusSliderTitle" style="visibility:hidden;">Focus Distance
-                    <span class="tooltiptext">Some attachments will widen your field of view depending on their Focus Distance</span></div>
-            </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="property" style="margin-left:15px;">
-                        <select id="sf" onchange="sfSlider(event)">
-                            <option value="1">None</option>
-                            <option value="0.99">SLR Magic Rangefinder</option>
-                            <option value="0.93">FM Lens</option>
-                            <option value="0.88">Rectilux 3FF</option>
-                            <option value="0.91">Rectilux CoreDNA</option>
-                        </select>
-                    </div>
-                </td>
-                <td class="secondCell" id="focusSlider" style="visibility:hidden;">
-                    min<input type="range" id="focus" value="100" disabled>inf
-                </td>
-            </tr>
-        </table>
-        
-<!-- Sensor Aspect Ratio -->
-        <div class="tooltip">Sensor Aspect Ratio
-            <span class="tooltiptext">Use a :1 ratio for "Custom". If unsure, use "I WANT A TAKING LENS" to fix this value based on your Resulting Aspect Ratio</span>
-        </div>
-        
-        <div class="property">
-            <select id="sar" onchange="checkCustom(event)">
-                <option value="1.78">16:9</option>
-                <option value="1.5">3:2</option>
-                <option value="1.33">4:3</option>
-                <option value="1">1:1</option>
-                <option value="1.2">6:5 Ursa</option>
-                <option value="1.50">3:2 ML (1290p)</option>
-                <option value="1.333">4:3 ML (1290p)</option><!--this looks strange-->
-                <option value="2.88">4:3 GH4</option><!--and this?-->
-                <option value="1.89">C4K GH4</option>
-                <option value="custom">Custom:</option>
-            </select>
-            <span id="customAR"></span>
-        </div>
-        
-<!-- hFOV -->
-        
-        <div class="tooltip">Resulting hFOV
-            <span class="tooltiptext">In equivalent focal length</span>
-        </div>
-        
-        <div class="property">
-            <input type="input" id="hfov" alt="horizontal field of view" value="38" onblur="checkMe(event)">&nbsp;mm
-        </div>
-        
-<!-- Resulting Aspect Ratio -->
-        
-        <div class="tooltip">Resulting Aspect Ratio
-            <!--<span class="tooltiptext">Say whatever you want to do here.</span>-->
-        </div>
-        
-        <div class="property">
-            <input type="input" id="rar" alt="resulting aspect ratio" value="2.37" onblur="checkMe(event)">&nbsp;:1
-        </div>
-        
-<!-- Vignette -->
-        
-        <div class="tooltip">Will it Vignette?
-            <!--<span class="tooltiptext">Say whatever you want to do here.</span>-->
-        </div>
-        
-        <div class="property">
-            <input type="input" id="vignette" style="
-            text-align:left;
-            width:300px;
-            border:none;
-            border-left:2px solid white;
-            color:#FF3523;
-            " disabled>
-        </div>
-        
-<!-- Buttons -->
-        
-        <div class="property">
-            <button type="button" onclick="calculateHFOV()">hFOV</button>
-            <button type="button" onclick="calculateTkLens()">I Want a Taking Lens</button>
-            <div id="alert"></div>
-        </div>
-
-<!-- Effective Aperture -->
-
-        <br><br>
-        <div class="tooltip" style="margin-top:-15px;">Max Effective Aperture
-            <span class="tooltiptext">Input the rear element diameter of the scope. If the resulting number is slower than your Taking Lens' current aperture, there's loss in light transmission due to the rear element diameter</span>
-        </div>
-        
-        <div class="property" style="margin-bottom:25px;">
-            <table><tr>
-                <td>
-                    <input type="input" id="backsize" alt="back size of scope" value="36" onblur="checkMe(event)">&nbsp;mm
-                </td>
-                <td>
-                    <button type="button" style="margin:0px; margin-left:10px; margin-right:10px;" onclick="calcAperture()">Calculate</button>
-                </td>
-                <td>
-                f/<input type="input" id="effectAperture" alt="effective aperture" disabled>
-                </td>
-                <td class="tooltip" style="margin-bottom:12px">REFERENCE CHART
-                    <span class="tooltiptext" style="text-align:center; width:200px">
-                        <table>
-                            <tr>
-                                <td class="referenceCell">
-                                    Iscorama 36 - 36mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    Iscorama 42 - 42mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="referenceCell">
-                                    Iscorama 54 - 54mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    Kowa B&H - 43mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="referenceCell">
-                                    Century - 50mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    LA7200 - 67mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="referenceCell">
-                                    Sankor 16D - 43mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    Baby H. - 21mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="referenceCell">
-                                    Kowa 16H - 49mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    Isco 2000 - 36mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="referenceCell">
-                                    Baby Moller - 20mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    Moller 16/32 - 35mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="referenceCell">
-                                    SLR Magic - 50mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    Cinelux - 50mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="referenceCell">
-                                    Baby Isco - 24mm
-                                </td>
-                                <td>|</td>
-                                <td class="referenceCell">
-                                    Ultra Star - 42mm
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">Find more lenses at <a href="http://www.lens-yclopedia.com" target="_blank" alt="Lens-yclopedia">Lens-yclopedia</a></td>
-                            </tr>
-                        </table>
-                </span></td>
-            </tr></table>
-        </div>
-        
+	<body>
+       <!-- all the math! -->
+        <script src="js/diopter.js"></script>
+        <script src="js/calculator.js"></script>
+        <!-- all the canvas! -->
+        <script src="js/schematics.js"></script>
+	    
+	    <!-- svg for border tabs -->
+		<svg class="hidden">
+			<defs>
+				<path id="tabshape" d="M80,60C34,53.5,64.417,0,0,0v60H80z"/>
+			</defs>
+		</svg>
+		
+		<div class="container">
+			<!-- Top Navigation -->
+			<section>
+				<div class="tabs tabs-style-shape">
+					<nav>
+						<ul>
+							<li>
+								<a href="#section-shape-1">
+									<svg viewBox="0 0 80 60" preserveAspectRatio="none"><use xlink:href="#tabshape"></use></svg>
+									<span><strong>Anamorphic Calculator</strong></span>
+								</a>
+							</li>
+							<li>
+								<a href="#section-shape-2">
+									<svg viewBox="0 0 80 60" preserveAspectRatio="none"><use xlink:href="#tabshape"></use></svg>
+									<span><strong>Diopter Calculator</strong></span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+					<div class="content-wrap">
+    <!-- anamorphic calculator -->
+						<section id="section-shape-1">
+    						<div class="main">
             
-        
-    </div>
+                                <div class="banner"><div class="title">Anamorphic Calculator</div>
+                                <div class="subtitle">Know the equivalent focal length of your horizontal field of view while using anamorphic adapters.</div>
+                                </div>
+                                
+                        <!-- Schematics canvas -->
+                                
+                                <div><canvas id="schematic"></canvas></div>
+                                
+                        <!-- Taking Lens -->
+                        
+                                <table class="splitField" style="width:100%;">
+                                    <tr>
+                                        <td>
+                                            <div class="tooltip">Taking Lens (focal length)
+                                            <!--<span class="tooltiptext">Say whatever you want to do here.</span>--></div>
+                                        </td>
+                                    <td>
+                                        <div class="tooltip" style="padding-left:28px; visibility:hidden;">Aperture Value
+                                            <!--<span class="tooltiptext">Sometimes your aperture helps with vignetting. Sometimes it doesn't</span>--></div>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="property">
+                                                <input type="input" id="tklens" alt="taking lens" value="50" onblur="checkMe(event)">&nbsp;mm
+                                                <input style="margin-left:10px; width:18px;" type="checkbox" id="pancake" alt="pancake lens">Pancake Lens?
+                                            </div>
+                                        </td>
+                                        <td class="secondCell" style="visibility:hidden;">
+                                            opn<input type="range" id="iris" value="0" disabled>cls
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                        <!-- Camera/Sensor -->
+                                
+                                <div class="tooltip">Camera/Sensor Size (crop factor)
+                                    <span class="tooltiptext">If your camera isn't listed above, select "Custom" and input the crop factor manually</span>
+                                </div>
+                                
+                                <div class="property">
+                                    <select id="crop" onchange="checkCustom(event)">
+                                        <option value="1">Full Frame</option>
+                                        <option value="1.3">APS-H</option>
+                                        <option value="1.5">APS-C/S35</option>
+                                        <option value="1.6">APS-C (Canon)</option>
+                                        <option value="2">MFT</option>
+                                        <option value="2.34">GH4 C4K</option>
+                                        <option value="2.49">GH4 4K UHD</option>
+                                        <option value="2.08">GH4 1080P</option>
+                                        <option value="0.5">Medium Format</option>
+                                        <option value="2.88">BMPCC</option>
+                                        <option value="1.85">BlackMagic Ursa</option>
+                                        <option value="custom">Custom:</option>
+                                    </select>
+                                    <span id="customCF"></span>
+                                </div>
+                                
+                        <!-- Focal Reducer -->
+                                
+                                <div class="tooltip">Focal Reducer
+                                    <span class="tooltiptext">RJ Focal Reducer and Vizelex’s Light Cannon are filed under “Others”. If your Focal Reducer isn't listed above, select "Custom" and input the magnification ratio manually</span>
+                                </div>
+                                
+                                <div class="property">
+                                    <select id="reducer" onchange="checkCustom(event)">
+                                        <option value="1">None</option>
+                                        <option value="0.71">SpeedBooster</option>
+                                        <option value="0.64">SpeedBooster XL</option>
+                                        <option value="0.72">LensTurbo</option>
+                                        <option value="0.58">SpeedBooster BMPCC</option>
+                                        <option value="0.72">Others</option>
+                                        <option value="custom">Custom:</option>
+                                    </select>
+                                    <span id="customFR"></span>
+                                </div>
+                                
+                        <!-- Anamorphic Adapter -->
+                                
+                                <div class="tooltip">Anamorphic Adapter
+                                    <!--<span class="tooltiptext">Say whatever you want to do here.</span>-->
+                                </div> <input style="margin-left:10px; width:18px;" type="checkbox" id="baby" alt="baby scope">Baby Scope?
+                                
+                                <div class="property">
+                                    <select id="ana" onchange="checkCustom(event)">
+                                        <option value="1.33">1.33x - Vintage (Century, Panasonic)</option>
+                                        <option value="1.333">1.33x - Modern (Isco, SLR Magic)</option>
+                                        <option value="1.5">1.5x - Iscorama, Bolex Moller</option>
+                                        <option value="1.75">1.75x - Kowa Inflight, Baby Hypergonar</option>
+                                        <option value="2">2x - Short Scope (Kowa, Elmo II, etc)</option>
+                                        <option value="2.001">2x - Long Scope (Sankor 16D, Elmo I, Sun, etc)</option>
+                                        <option value="custom">Custom:</option>
+                                    </select>
+                                    <span id="customAA"></span>
+                                </div>
+                                
+                        <!-- Single Focus -->
+                                
+                                <table class="splitField" style="width:100%;">
+                                    <tr>
+                                        <td>
+                                            <div class="tooltip">Single Focus Solution
+                                            <!--<span class="tooltiptext">If your camera isn't listed above, select "Custom" and input the crop factor manually</span>--></div>
+                                        </td>
+                                    <td>
+                                        <div class="tooltip" id="focusSliderTitle" style="visibility:hidden;">Focus Distance
+                                            <span class="tooltiptext">Some attachments will widen your field of view depending on their Focus Distance</span></div>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="property" style="margin-left:15px;">
+                                                <select id="sf" onchange="sfSlider(event)">
+                                                    <option value="1">None</option>
+                                                    <option value="0.99">SLR Magic Rangefinder</option>
+                                                    <option value="0.93">FM Lens</option>
+                                                    <option value="0.88">Rectilux 3FF</option>
+                                                    <option value="0.91">Rectilux CoreDNA</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td class="secondCell" id="focusSlider" style="visibility:hidden;">
+                                            min<input type="range" id="focus" value="100" disabled>inf
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                        <!-- Sensor Aspect Ratio -->
+                                <div class="tooltip">Sensor Aspect Ratio
+                                    <span class="tooltiptext">Use a :1 ratio for "Custom". If unsure, use "I WANT A TAKING LENS" to fix this value based on your Resulting Aspect Ratio</span>
+                                </div>
+                                
+                                <div class="property">
+                                    <select id="sar" onchange="checkCustom(event)">
+                                        <option value="1.78">16:9</option>
+                                        <option value="1.5">3:2</option>
+                                        <option value="1.33">4:3</option>
+                                        <option value="1">1:1</option>
+                                        <option value="1.2">6:5 Ursa</option>
+                                        <option value="1.50">3:2 ML (1290p)</option>
+                                        <option value="1.333">4:3 ML (1290p)</option><!--this looks strange-->
+                                        <option value="2.88">4:3 GH4</option><!--and this?-->
+                                        <option value="1.89">C4K GH4</option>
+                                        <option value="custom">Custom:</option>
+                                    </select>
+                                    <span id="customAR"></span>
+                                </div>
+                                
+                        <!-- hFOV -->
+                                
+                                <div class="tooltip">Resulting hFOV
+                                    <span class="tooltiptext">In equivalent focal length</span>
+                                </div>
+                                
+                                <div class="property">
+                                    <input type="input" id="hfov" alt="horizontal field of view" value="38" onblur="checkMe(event)">&nbsp;mm
+                                </div>
+                                
+                        <!-- Resulting Aspect Ratio -->
+                                
+                                <div class="tooltip">Resulting Aspect Ratio
+                                    <!--<span class="tooltiptext">Say whatever you want to do here.</span>-->
+                                </div>
+                                
+                                <div class="property">
+                                    <input type="input" id="rar" alt="resulting aspect ratio" value="2.37" onblur="checkMe(event)">&nbsp;:1
+                                </div>
+                                
+                        <!-- Vignette -->
+                                
+                                <div class="tooltip">Will it Vignette?
+                                    <!--<span class="tooltiptext">Say whatever you want to do here.</span>-->
+                                </div>
+                                
+                                <div class="property">
+                                    <input type="input" id="vignette" style="
+                                    text-align:left;
+                                    width:300px;
+                                    border:none;
+                                    border-left:2px solid white;
+                                    color:#FF3523;
+                                    " disabled>
+                                </div>
+                                
+                        <!-- Buttons -->
+                                
+                                <div class="property">
+                                    <button onclick="calculateHFOV()">hFOV</button>
+                                    <button onclick="calculateTkLens()">I Want a Taking Lens</button>
+                                    <div id="alert"></div>
+                                </div>
+                        
+                        <!-- Effective Aperture -->
+                        
+                                <br><br>
+                                <div class="tooltip" style="margin-top:-15px;">Max Effective Aperture
+                                    <span class="tooltiptext">Input the rear element diameter of the scope. If the resulting number is slower than your Taking Lens' current aperture, there's loss in light transmission due to the rear element diameter</span>
+                                </div>
+                                
+                                <div class="property" style="margin-bottom:25px;">
+                                    <table><tr>
+                                        <td>
+                                            <input type="input" id="backsize" alt="back size of scope" value="36" onblur="checkMe(event)">&nbsp;mm
+                                        </td>
+                                        <td>
+                                            <button style="margin:0px; margin-left:10px; margin-right:10px;" onclick="calcAperture()">Calculate</button>
+                                        </td>
+                                        <td>
+                                        f/<input type="input" id="effectAperture" alt="effective aperture" style="width:50px;" disabled>
+                                        </td>
+                                        <td class="tooltip" style="margin-bottom:12px">REFERENCE CHART
+                                            <span class="tooltiptext" style="text-align:center; width:220px">
+                                                <table>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            Iscorama 36 - 36mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            Iscorama 42 - 42mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            Iscorama 54 - 54mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            Kowa B&H - 43mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            Century - 50mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            LA7200 - 67mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            Sankor 16D - 43mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            Baby H. - 21mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            Kowa 16H - 49mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            Isco 2000 - 36mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            Baby Moller - 20mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            Moller 16/32 - 35mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            SLR Magic - 50mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            Cinelux - 50mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="referenceCell">
+                                                            Baby Isco - 24mm
+                                                        </td>
+                                                        <td>|</td>
+                                                        <td class="referenceCell">
+                                                            Ultra Star - 42mm
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">Find more lenses at <a href="http://www.lens-yclopedia.com" target="_blank" alt="Lens-yclopedia">Lens-yclopedia</a></td>
+                                                    </tr>
+                                                </table>
+                                        </span></td>
+                                    </tr></table>
+                                </div>
+                                
+                                    
+                                
+                            </div>
+						</section>
+						
+						
+    <!-- diopter calculator -->
+						<section id="section-shape-2">
+						    <div class="main">
+    						    <div class="banner2"><div class="title">Diopter Calculator</div>
+                                <div class="subtitle">Quickly find out diopter strength, minimum and maximum focus for any lens.</div>
+                                </div>
+                                
+                                <table style="width:80%; margin:auto; margin-left:22%; margin-bottom:15px;">
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="tooltip">Max Focus Distance
+                                            <!--<span class="tooltiptext">Say whatever you want to do here.</span>--></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input id="maxfocus" value="Inf." disabled>m
+                                        </td>
+                                        <td>
+                                            <input id="new_maxfocus" value="Infinity" onblur="lastEdit(event)" style="width:60px;">m
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="tooltip">Min Focus Distance
+                                            <!--<span class="tooltiptext">Say whatever you want to do here.</span>--></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input id="minfocus" value="0.00" onblur="lastEdit(event)" style="width:60px;">m
+                                        </td>
+                                        <td>
+                                            <input id="new_minfocus" value="0.00" onblur="lastEdit(event)" style="width:60px;">m
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="tooltip">Diopter Strength
+                                            <!--<span class="tooltiptext">Say whatever you want to do here.</span>--></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            +<input id="diopter" value="0" onblur="lastEdit(event)" style="width:60px;">
+                                        </td>
+                                        <td>
+                                            <button onclick="calcDiopter()" style="margin-top:-2px;">Calculate</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div id="warning"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+						</section>
+					</div><!-- /content -->
+				</div><!-- /tabs -->
+			</section>
+		</div><!-- /container -->
+		
+		<!-- Paypal and Creative Commons -->
     
-<!-- Paypal and Creative Commons -->
+        <div class="bottom">
+            <div id="paypal">
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="hosted_button_id" value="QD886JKT7YXFG">
+                <input id="paypalbutton" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            </div>
     
-    <div class="bottom">
-        <div id="paypal">
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-            <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="hosted_button_id" value="TTQFTYK29MM98">
-            <input id="paypalbutton" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-            </form>
+            <span class="tooltip" style="margin-top:3px;font-weight:normal;">©2008-2016 TFerradans - all rights reserved</span>
+            <span class="tooltip" style="margin-top:0px;">Developed by Tito Ferradans<br>
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a></span>
         </div>
+	
+	        <!-- script for tabs -->
+		<script src="js/cbpFWTabs.js"></script>
+		<script>
+			(function() {
 
-        <span class="tooltip" style="margin-top:3px;font-weight:normal;">©2008-2016 TFerradans - all rights reserved</span>
-        <span class="tooltip" style="margin-top:0px;">Developed by Tito Ferradans<br>
-        <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a></span>
-    </div>
+				[].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
+					new CBPFWTabs( el );
+				});
 
-</body>
-
+			})();
+		</script>
+	
+	</body>
 </html>
-
-
-
